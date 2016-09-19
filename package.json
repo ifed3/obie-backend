@@ -1,0 +1,21 @@
+{
+  "name": "obie-stripe-server",
+  "version": "1.0.0",
+  "description": "Payments processor for Obie app",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ife Ajiboye <ife@obieapp.com>",
+  "dependencies": {
+    "body-parser": "*",
+    "compression": "*",
+    "dotenv": "*",
+    "express": "*",
+    "mongoose": "*",
+    "stripe": "*",
+    "stripe-webhook-middleware": "*"
+  }
+}
