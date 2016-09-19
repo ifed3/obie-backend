@@ -2,8 +2,11 @@
 
 'use strict';
 
+// Libraries to use in application
+require('dotenv').config();
 const mongoose = require('mongoose');
 
+// Get environment config variables
 const config = require('./config'),
     port = process.env.PORT || 3000;
 
@@ -19,6 +22,7 @@ function listen() {
     });
 }
 
+// Connect to database
 function connect() {
     var options = { server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 }}};
     return mongoose.connect(config.db, options).connection;
