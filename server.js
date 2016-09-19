@@ -2,10 +2,10 @@
 
 'use strict';
 
-const app = require('./app/index'),
-    port = process.env.PORT || 3000;
+const mongoose = require('mongoose');
 
-// Get mongoose and a db connection string
+const config = require('./config'),
+    port = process.env.PORT || 3000;
 
 // Begin listening for requests once connected to database
 connect()
