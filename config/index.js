@@ -6,6 +6,10 @@ const development = require('./env/development'),
     test = require('./env/test'),
     production = require('./env/production');
 
+const defaults = {
+    root: path.join(__dirname, '..')
+}
+
 // Expose environment variables
 module.exports = {
     development: extend(development, defaults),
