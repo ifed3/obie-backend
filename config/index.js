@@ -1,6 +1,7 @@
 'use strict';
 
-const extend = require('util')._extend;
+const path = require('path'),
+    extend = require('util')._extend;
 
 const development = require('./env/development'),
     test = require('./env/test'),
