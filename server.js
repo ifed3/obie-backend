@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 
 // Get environment config variables
 const config = require('./config'),
+    app = require('./config/express'),
     port = process.env.PORT || 3000;
 
 // Begin listening for requests once connected to database
