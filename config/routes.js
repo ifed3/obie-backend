@@ -2,6 +2,9 @@ const StripeWebHook = require('stripe-webhook-middleware'),
     config = require('./'),
     router = require('express').Router();
 
+const companies = require('../app/controllers/companies'),
+    payment = require('../app/controllers/payment');    
+
 const stripeWebjook = new StripeWebHook({
     stripeApiKey: config.stripeOptions.apiKey,
     respond: true
@@ -16,14 +19,22 @@ router.get('/', function(req, res) {
     res.json({ message: 'obie-stripe-api' })
 })
 
-// router.route('/customers')
-//     .post(customer.create)
-//     .get(customer.index)
+// Set routing for company api calls
+router.route('/companies')
+    .post(companies.create)
+    .get(companies.index)
 
-// router.route('/customers/:customer_id')
-//     .get(customer.show)
-//     .post(customer.update)
-//     .delete(customer.destroy)  
+router.route('/companies/:company_id')
+    .get(companies.show)
+    .post(companies.update)
+    .delete(companies.destroy)  
+
+router.route('/companies/:company_id/charge')
+    .get(payment.index)
+    .post(customer.create)   
+
+router.route('/companies/:company_id/charge/:charge_id')
+    .get(payment.show)      
 
 // router.route('/customers/:customer_id/sources')
 //     .post(customer.update_source)
