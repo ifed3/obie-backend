@@ -20,31 +20,31 @@ module.exports = function stripeCustomer(schema, options) {
         }
     });
 
-    // Check for stripe customer id before saving the company
+    // Create stripe Customer object before saving company to db
     schema.pre('save', function(next){
         var user = this;
         if (!user.isNew || user.stripe.customerId) return next();
         user.createCustomer(function(err){
-            if (err) return next(err); // Log error
+            if (err) return next(err);
             next();
         });
     });
 
-    // Retrieve company subscription plans
-    schema.statics.getPlans = function() {
-        return options.planData;
-    };
-
-    // // Set stripe id to be that of company id upon when creating new company
+    // Create stripe Customer object and set company's customer id 
     schema.methods.createCustomer = function(callback) {
         var user = this;
         stripe.customers.create({
             email: user.email
         }, function(err, customer) {
-            if (err) return callback(error);
+            if (err) return callback(err);
             user.stripe.customerId = customer.id;
             return callback();
         });
+    };
+
+    // Retrieve company subscription plans
+    schema.statics.getPlans = function() {
+        return options.planData;
     };
 
     schema.methods.setCard = function(stripe_token, callback) {

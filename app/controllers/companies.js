@@ -3,6 +3,8 @@
 const mongoose = require('mongoose'),
     Company = require('../../app/models/company');
 
+
+// Create new company
 exports.create = function(req, res) {
     var company = new Company(req.body);
     company.save(function(err) {
@@ -11,6 +13,8 @@ exports.create = function(req, res) {
     });
 }
 
+
+// Show all companies
 exports.index = function(req, res) {
     Company.find(function(err, companies) {
         if (err) res.send(err);
@@ -18,6 +22,8 @@ exports.index = function(req, res) {
     })
 }
 
+
+// Show specific company details
 exports.show = function(req, res) {
     Company.findById(req.params.company_id, function(err, company) {
         if (err) res.send(err);
@@ -25,6 +31,7 @@ exports.show = function(req, res) {
     });
 }
 
+// Update specific company details
 exports.update = function(req, res) {
     Company.findById(req.params.company_id, function(err, company) {
         if (err) res.send(err);
@@ -36,6 +43,7 @@ exports.update = function(req, res) {
     });
 }
 
+// Delete a company from database
 exports.destroy = function(req, res) {
     Company.remove({_id: req.params.company_id}, function(err, companies) {
         if (err) res.send(err);
