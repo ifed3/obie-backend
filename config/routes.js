@@ -34,7 +34,17 @@ router.route('/companies/:company_id/charge')
     .post(customer.create)   
 
 router.route('/companies/:company_id/charge/:charge_id')
-    .get(payment.show)      
+    .get(payment.show)   
+
+router.route('/companies/:company_id/customer')
+    .get(customer.show)
+    .post(customer.create)  
+
+router.route('/companies/:company_id/customer/sources')
+    .post(customer.sources)
+
+router.route('/companies/:company_id/customer/source')
+    .post(customer.source)                    
 
 // router.route('/customers/:customer_id/sources')
 //     .post(customer.update_source)
