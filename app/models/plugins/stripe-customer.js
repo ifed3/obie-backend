@@ -1,7 +1,7 @@
 'use strict';
 
-const Stripe = require('stripe');
-var stripe;
+const Stripe = require('stripe'),
+    stripe;
 
 // Extend company schema with the following properties
 module.exports = function stripeCustomer(schema, options) {
