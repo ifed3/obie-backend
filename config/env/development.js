@@ -5,8 +5,8 @@
 module.exports = {
     db: process.env.DEV_MONGODB,
     stripeOptions: {
-        apiKey: process.env.STRIPE_KEY,
-        stripePubKey: process.env.STRIPE_PUB_KEY,
+        apiKey: process.env.DEV_STRIPE_KEY,
+        stripePubKey: process.env.DEV_STRIPE_PUB_KEY,
         defaultPlan: 'standard',
         plans: ['standard', 'premium'],
         planData: {
