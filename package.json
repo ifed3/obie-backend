@@ -10,11 +10,13 @@
   },
   "author": "Ife Ajiboye <ife@obieapp.com>",
   "dependencies": {
+    "bcrypt": "*",
     "body-parser": "*",
     "compression": "*",
     "dotenv": "*",
     "express": "*",
     "mongoose": "*",
+    "mongoose-timestamp": "*",
     "stripe": "*",
     "stripe-webhook-middleware": "*"
   }
