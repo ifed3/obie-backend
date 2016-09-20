@@ -4,7 +4,7 @@ const express = require('express'),
     config = require('./'),
     bodyParser = require('body-parser');
 
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV;
     
 var app = express();
 
