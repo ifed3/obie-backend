@@ -11,8 +11,9 @@ function generateToken(user) {
 
 function setUserInfo(req) {
     return {
-        _id: request._id,
+        _id: req._id,
         name: req.profile.name,
+        company: req.profile.company,
         email: req.email,
         role: req.role
     }
@@ -28,8 +29,8 @@ exports.login = function(req, res) {
 
 exports.register = function(req, res, next) {
     const email = req.body.email,
-        name = req.body.name,
-        company = req.body.company,
+        name = req.body.profile.name,
+        company = req.body.profile.company,
         password = req.body.password;
 
     // Error checking
@@ -48,6 +49,7 @@ exports.register = function(req, res, next) {
             if (err) return next(err);
             console.log("User succesfully created")
             // Respond with json web token upon succesfull creation
+            let userInfo = setUserInfo(user);
             res.status(200).json({
                 token: 'JWT ' + generateToken(userInfo), 
                 user: userInfo
