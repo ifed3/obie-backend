@@ -12,11 +12,6 @@ const stripeWebjook = new StripeWebHook({
     respond: true
 });
 
-router.use(function(req, res, next) {
-    console.log("New request made");
-    next();
-});
-
 // Perform authentication
 router.route('/authenticate')
     .post(authentication.create)
