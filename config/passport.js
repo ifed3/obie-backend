@@ -1,12 +1,16 @@
 'use strict';
 
-const passport = require('passport'),
-    LocalStrategy = require('passport-local'), 
+const LocalStrategy = require('passport-local'), 
     JWTStrategy = require('passport-jwt').Strategy,
     ExtractJWT = require('passport-jwt').ExtractJwt,
     User =  require('../app/models/user'),
-    localOptions = { usernameField: 'email' },
     config = require('./');
+
+const localOptions = { usernameField: 'email' },
+    jwtOptions = {
+        jwtFromRequest: ExtractJWT.fromAuthHeader(),
+        secretOrKey: config.secret
+    };
 
 module.exports = function(passport) {
     const localLogin = new LocalStrategy(localOptions, function(email, password, done) {
@@ -23,11 +27,6 @@ module.exports = function(passport) {
         });
     });
 
-    const jwtOptions = {
-        jwtFromRequest: ExtractJWT.fromAuthHeader(),
-        secretOrKey: config.secret
-    };
-
     const jwtLogin = new JWTStrategy(jwtOptions, function(payload, done) {
         User.findById(payload._id, function(err, user) {
             if (err) return done(err, false);
@@ -38,4 +37,5 @@ module.exports = function(passport) {
 
     passport.use(jwtLogin);
     passport.use(localLogin);
+
 }

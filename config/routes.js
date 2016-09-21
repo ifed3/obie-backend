@@ -1,55 +1,72 @@
 const StripeWebHook = require('stripe-webhook-middleware'),
     express = require('express'),
     config = require('./'),
+    passport = require('passport'),
+    passportService = require('./passport'),
     router = express.Router(),
     authRouter = express.Router();
 
+// Get controllers
 const authentication = require('../app/controllers/authentication'), 
-    companies = require('../app/controllers/companies'),
+    user = require('../app/controllers/user'),
     customer = require('../app/controllers/customer'),
-    payment = require('../app/controllers/payment');    
+    payment = require('../app/controllers/payment');
 
+// Set strategies for passport authentication
+const requireAuth = passport.authenticate('jwt', {session: false}),
+    requireLogin = passport.authenticate('local', {session: false});
+
+// Create stripe webhook object
 const stripeWebjook = new StripeWebHook({
     stripeApiKey: config.stripeOptions.apiKey,
     respond: true
 });
 
-// Perform authentication
-authRouter.route('/login')
-    .post(authentication.login);
-authRouter.route('/register')
-    .post(authentication.register);
-router.use('/auth', authRouter);
+// Role types constants
+const REQUIRE_ADMIN = 'Admin',
+    REQUIRE_OWNER = 'Owner',
+    REQUIRE_CLIENT = 'Client',
+    REQUIRE_MEMBER = 'Member';
 
-router.get('/', function(req, res) {
-    res.json({ message: 'obie-stripe-api' })
-});
+module.exports = function(app, passport) {
 
-// Set routing for company api calls
-router.route('/companies')
-    .post(companies.create)
-    .get(companies.index);
-router.route('/companies/:company_id')
-    .get(companies.show)
-    .post(companies.update)
-    .delete(companies.destroy); 
+    // Perform authentication
+    authRouter.post('/login', requireLogin, authentication.login);
+    authRouter.post('/register', authentication.register);
+    router.use('/auth', authRouter);
 
-// Set routing for charges to a company
-router.route('/companies/:company_id/charge')
-    .get(payment.index);
-router.route('/companies/:company_id/charge/:charge_id')
-    .get(payment.show);  
+    router.get('/', function(req, res) {
+        res.json({ message: 'obie-stripe-api' })
+    });
 
-// iOS Stripe integration
+    // Set routing for user api calls
+    router.route('/users')
+        .get(user.index);
+    router.route('/user/:id')
+        .get(user.show)
+        .put(user.update)
+        .delete(user.destroy); 
 
-// Retrieve customer endpoint
-router.route('/companies/:company_id/customer')
-    .get(customer.show);
-// Create card endpoint    
-router.route('/companies/:company_id/customer/sources')
-    .post(customer.sources);
-// Select card source endpoint    
-router.route('/companies/:company_id/customer/source')
-    .post(customer.source);                    
+    // Set routing for charges to a user
+    router.route('/user/:id/charge')
+        .get(payment.index);
+    router.route('/user/:id/charge/:charge_id')
+        .get(payment.show);  
 
-module.exports = router;
+    /* iOS Stripe integration
+    */
+
+    // Retrieve customer endpoint
+    router.route('/customer')
+        .get(customer.show);
+    // Create card endpoint    
+    router.route('/customer/sources')
+        .post(customer.sources);
+    // Select card source endpoint    
+    router.route('/customer/source')
+        .post(customer.source);   
+
+    // Set all routes to be prefixed with apis
+    app.use('/api', router);                         
+
+}

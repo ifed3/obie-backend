@@ -4,6 +4,7 @@ const bodyParser = require('body-parser'),
     logger = require('morgan'),
     express = require('express'),
     passport = require('passport'),
+    passportService = require('./passport'),
     jwt = require('jsonwebtoken'),
     config = require('./');
 
@@ -15,6 +16,9 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(passport.initialize());
+passportService(passport);
+
 // Log request to console
 app.use(logger('dev'));
 
@@ -24,6 +28,6 @@ app.use(function(req, res, next) {
 });
 
 const router = require('../config/routes');
-app.use('/api', router);
+router(app, passport);
 
 module.exports = app;
