@@ -16,37 +16,38 @@ const stripeWebjook = new StripeWebHook({
 router.route('/authenticate')
     .post(authentication.create)
 
+// Middleware route to verify authentication token
+router.use(authentication.verify);
+
 router.get('/', function(req, res) {
     res.json({ message: 'obie-stripe-api' })
-})
+});
 
 // Set routing for company api calls
 router.route('/companies')
     .post(companies.create)
-    .get(companies.index)
+    .get(companies.index);
 router.route('/companies/:company_id')
     .get(companies.show)
     .post(companies.update)
-    .delete(companies.destroy)  
+    .delete(companies.destroy); 
 
 // Set routing for charges to a company
 router.route('/companies/:company_id/charge')
-    .get(payment.index)
+    .get(payment.index);
 router.route('/companies/:company_id/charge/:charge_id')
-    .get(payment.show)   
+    .get(payment.show);  
 
 // iOS Stripe integration
 
 // Retrieve customer endpoint
 router.route('/companies/:company_id/customer')
-    .get(customer.show)
-
+    .get(customer.show);
 // Create card endpoint    
 router.route('/companies/:company_id/customer/sources')
-    .post(customer.sources)
-
+    .post(customer.sources);
 // Select card source endpoint    
 router.route('/companies/:company_id/customer/source')
-    .post(customer.source)                    
+    .post(customer.source);                    
 
 module.exports = router;
