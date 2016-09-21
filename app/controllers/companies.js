@@ -1,27 +1,24 @@
 'use strict';
 
-const mongoose = require('mongoose'),
-    Company = require('../../app/models/company');
-
+const Company = require('../../app/models/company');
 
 // Create new company
 exports.create = function(req, res) {
     var company = new Company(req.body);
     company.save(function(err) {
         if (err) res.send(err);
+        console.log("Company succesfully saved")
         res.json({ message: 'Company created'});
     });
 }
 
-
 // Show all companies
 exports.index = function(req, res) {
-    Company.find(function(err, companies) {
+    Company.find({}, function(err, companies) {
         if (err) res.send(err);
         res.json(companies);
     })
 }
-
 
 // Show specific company details
 exports.show = function(req, res) {
