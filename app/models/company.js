@@ -2,9 +2,9 @@
 
 const mongoose = require('mongoose'),
     timestamps = require('mongoose-timestamp'),
-    bcrypt = require('bcrypt-nodejs'),
+    bcrypt = require('bcrypt'),
     stripeOptions = require('../../config').stripeOptions,
-    stripeCustomer = require('./plugins/stripeCustomer');
+    stripeCustomer = require('./plugins/stripe-customer');
 
 var CompanySchema = new mongoose.Schema({
     email: {type: String, unique: true, lowercase: true},
