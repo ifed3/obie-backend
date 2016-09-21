@@ -19,7 +19,8 @@ var UserSchema = new mongoose.Schema({
     profile: {
         name: { type: String, required: true },
         company: { type: String, required: true },
-        website: { type: String }
+        website: { type: String },
+        picture: { type: String }
     },
     role: {
         type: String,
