@@ -18,6 +18,7 @@
     "morgan": "*",
     "mongoose": "*",
     "passport": "*",
+    "passport-local": "*",
     "passport-jwt": "*",
     "stripe": "*",
     "stripe-webhook-middleware": "*"
