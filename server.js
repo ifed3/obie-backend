@@ -5,6 +5,7 @@
 // Libraries to use in application
 require('dotenv').config();
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 
 // Get environment config variables
 const config = require('./config'),
