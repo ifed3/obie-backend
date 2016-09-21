@@ -2,16 +2,6 @@
 
 const User = require('../../app/models/user');
 
-// Create new user
-exports.create = function(req, res) {
-    var user = new User(req.body);
-    user.save(function(err) {
-        if (err) res.send(err);
-        console.log("User succesfully saved")
-        res.json({ message: 'User created'});
-    });
-}
-
 // Show all companies
 exports.index = function(req, res) {
     User.find({}, function(err, companies) {
