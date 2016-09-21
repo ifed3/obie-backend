@@ -4,9 +4,9 @@ const passport = require('passport'),
     LocalStrategy = require('passport-local'), 
     JWTStrategy = require('passport-jwt').Strategy,
     ExtractJWT = require('passport-jwt').ExtractJwt,
-    User =  require('../../app/models/user')
+    User =  require('../app/models/user'),
     localOptions = { usernameField: 'email' },
-    config = require('../../config');
+    config = require('./');
 
 module.exports = function(passport) {
     const localLogin = new LocalStrategy(localOptions, function(email, password, done) {
