@@ -42,26 +42,22 @@ module.exports = function(app, passport) {
     // Set routing for user api calls
     router.route('/users')
         .get(user.index);
-    router.route('/user/:id')
+    router.route('/users/:id')
         .get(user.show)
         .put(user.update)
         .delete(user.destroy); 
 
     // Set routing for charges to a user
-    router.route('/user/:id/charge')
-        .get(payment.index);
-    router.route('/user/:id/charge/:charge_id')
-        .get(payment.show);  
+    router.get('/charge', payment.index);
+    router.get('/charge/:charge_id', payment.show);  
 
     /* iOS Stripe integration
     */
 
     // Retrieve customer endpoint
-    router.route('/customer')
-        .get(customer.show);
+    router.get('/customer', customer.show);
     // Create card endpoint    
-    router.route('/customer/sources')
-        .post(customer.sources);
+    router.post('/customer/sources', customer.sources);
     // Select card source endpoint    
     router.route('/customer/source')
         .post(customer.source);   
