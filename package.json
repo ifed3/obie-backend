@@ -12,13 +12,11 @@
   "dependencies": {
     "bcrypt": "*",
     "body-parser": "*",
-    "compression": "*",
     "dotenv": "*",
     "express": "*",
     "jsonwebtoken": "*",
     "morgan": "*",
     "mongoose": "*",
-    "mongoose-timestamp": "*",
     "passport": "*",
     "passport-jwt": "*",
     "stripe": "*",
