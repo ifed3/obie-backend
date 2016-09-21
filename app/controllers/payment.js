@@ -1,6 +1,6 @@
 'use strict';
 
-const Company = require('../../app/models/user'),
+const User = require('../../app/models/user'),
     config = require('../../config'),
     stripe = require('stripe')(config.stripeOptions.apiKey);
 
