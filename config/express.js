@@ -15,6 +15,9 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Log request to console
+app.use(morgan('dev'));
+
 app.use(function(req, res, next) {
     res.locals.stripePubKey = config.stripeOptions.stripePubKey;
     next(); 
