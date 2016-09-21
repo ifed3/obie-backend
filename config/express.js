@@ -1,7 +1,7 @@
 'use strict';
 
 const bodyParser = require('body-parser'),
-    morgan = require('morgan'),
+    logger = require('morgan'),
     express = require('express'),
     passport = require('passport'),
     jwt = require('jsonwebtoken'),
@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Log request to console
-app.use(morgan('dev'));
+app.use(logger('dev'));
 
 app.use(function(req, res, next) {
     res.locals.stripePubKey = config.stripeOptions.stripePubKey;
