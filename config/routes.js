@@ -1,6 +1,8 @@
 const StripeWebHook = require('stripe-webhook-middleware'),
+    express = require('express'),
     config = require('./'),
-    router = require('express').Router();
+    router = express.Router(),
+    authRouter = express.Router();
 
 const authentication = require('../app/controllers/authentication'), 
     companies = require('../app/controllers/companies'),
@@ -13,11 +15,11 @@ const stripeWebjook = new StripeWebHook({
 });
 
 // Perform authentication
-router.route('/authenticate')
-    .post(authentication.create)
-
-// Middleware route to verify authentication token
-router.use(authentication.verify);
+authRouter.route('/login')
+    .post(authentication.login);
+authRouter.route('/register')
+    .post(authentication.register);
+router.use('/auth', authRouter);
 
 router.get('/', function(req, res) {
     res.json({ message: 'obie-stripe-api' })
