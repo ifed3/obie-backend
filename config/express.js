@@ -1,8 +1,11 @@
 'use strict';
 
-const express = require('express'),
-    config = require('./'),
-    bodyParser = require('body-parser');
+const bodyParser = require('body-parser'),
+    morgan = require('morgan'),
+    express = require('express'),
+    passport = require('passport'),
+    jwt = require('jsonwebtoken'),
+    config = require('./');
 
 const env = process.env.NODE_ENV;
     
@@ -18,6 +21,6 @@ app.use(function(req, res, next) {
 });
 
 const router = require('../config/routes');
-app.use(router);
+app.use('/api', router);
 
 module.exports = app;
