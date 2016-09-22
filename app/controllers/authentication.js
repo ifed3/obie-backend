@@ -20,7 +20,7 @@ function setUserInfo(req) {
 };
 
 // exports.ensureUnauthenticated = function(req, res, next) {
-//   if (req.isAuthenticated()) return next();
+//   if (!req.isAuthenticated()) return next();
 //   next();
 // }
 
@@ -65,15 +65,13 @@ exports.register = function(req, res, next) {
 
 exports.roleAuth = function(role) {
     return function(req, res, next) {
+        debugger;
+        if (!req.isAuthenticated()) return next('Unauthorized');
         const user = req.user
         User.findById(user._id, function(err, user) {
-            if (err) {
-                res.status(422).json({ error: 'No user was found'});
-                return next(err);
-            }
+            if (err) res.status(422).json({ error: 'No user was found'});
             if (user.role == role) return next();
             res.status(401).json({ error: "You are not authorized to view this content"});
-            return next('Unauthorized');
         });
     }
 }

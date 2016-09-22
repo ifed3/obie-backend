@@ -40,7 +40,7 @@ module.exports = function(app, passport) {
     });
 
     // Set routing for user api calls
-    router.get('/users', authentication.roleAuth('owner'), user.index);
+    router.get('/users', requireAuth, authentication.roleAuth('owner'), user.index);
     router.route('/users/:id', requireAuth)
         .get(user.show)
         .put(user.update)
