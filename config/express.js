@@ -1,6 +1,7 @@
 'use strict';
 
-const bodyParser = require('body-parser'),
+const fs = require("fs"),
+    bodyParser = require('body-parser'),
     logger = require('morgan'),
     express = require('express'),
     passport = require('passport'),
@@ -9,7 +10,14 @@ const bodyParser = require('body-parser'),
     config = require('./');
 
 const env = process.env.NODE_ENV;
+
+// const ssl_options = {
+//   key: fs.readFileSync('privatekey.pem'),
+//   cert: fs.readFileSync('certificate.pem')
+// };
     
+// var app = express.createServer(ssl_options);
+
 var app = express();
 
 // Use bodyParser for retrieving data from post requests
