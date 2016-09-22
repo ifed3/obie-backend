@@ -12,10 +12,6 @@ const authentication = require('../app/controllers/authentication'),
     customer = require('../app/controllers/customer'),
     payment = require('../app/controllers/payment');
 
-// Set strategies for passport authentication
-const requireAuth = passport.authenticate('jwt', {session: false}),
-    requireLogin = passport.authenticate('local', {session: false});
-
 // Create stripe webhook object
 const stripeWebjook = new StripeWebHook({
     stripeApiKey: config.stripeOptions.apiKey,
@@ -30,37 +26,39 @@ const REQUIRE_ADMIN = 'Admin',
 
 module.exports = function(app, passport) {
 
+    // Set strategies for passport authentication
+    const requireAuth = passport.authenticate('jwt', {session: false}),
+    requireLogin = passport.authenticate('local', {session: false});
+
     // Perform authentication
     authRouter.post('/login', requireLogin, authentication.login);
     authRouter.post('/register', authentication.register);
     router.use('/auth', authRouter);
 
-    router.get('/', function(req, res) {
+    router.get('/', requireAuth, function(req, res) {
         res.json({ message: 'obie-stripe-api' })
     });
 
     // Set routing for user api calls
-    router.route('/users')
-        .get(user.index);
-    router.route('/users/:id')
+    router.get('/users', authentication.roleAuth('owner'), user.index);
+    router.route('/users/:id', requireAuth)
         .get(user.show)
         .put(user.update)
         .delete(user.destroy); 
 
     // Set routing for charges to a user
-    router.get('/charge', payment.index);
-    router.get('/charge/:charge_id', payment.show);  
+    router.get('/charge', requireAuth, payment.index);
+    router.get('/charge/:charge_id', requireAuth, payment.show);  
 
     /* iOS Stripe integration
     */
 
     // Retrieve customer endpoint
-    router.get('/customer', customer.show);
+    router.get('/customer', requireAuth, customer.show);
     // Create card endpoint    
-    router.post('/customer/sources', customer.sources);
+    router.post('/customer/sources', requireAuth, customer.sources);
     // Select card source endpoint    
-    router.route('/customer/source')
-        .post(customer.source);   
+    router.post('/customer/source', requireAuth, customer.source) 
 
     // Set all routes to be prefixed with apis
     app.use('/api', router);                         

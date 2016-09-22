@@ -19,6 +19,11 @@ function setUserInfo(req) {
     }
 };
 
+// exports.ensureUnauthenticated = function(req, res, next) {
+//   if (req.isAuthenticated()) return next();
+//   next();
+// }
+
 exports.login = function(req, res) {
     let userInfo = setUserInfo(req.user);
     res.status(200).json({
