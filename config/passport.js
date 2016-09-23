@@ -1,6 +1,6 @@
 'use strict';
 
-const DigestStrategy = require('passport-http').BasicStrategy, 
+const BasicStrategy = require('passport-http').BasicStrategy, 
     JWTStrategy = require('passport-jwt').Strategy,
     ExtractJWT = require('passport-jwt').ExtractJwt,
     User =  require('../app/models/user'),
