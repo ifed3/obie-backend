@@ -1,6 +1,6 @@
 'use strict';
 
-const LocalStrategy = require('passport-local'), 
+const DigestStrategy = require('passport-http').BasicStrategy, 
     JWTStrategy = require('passport-jwt').Strategy,
     ExtractJWT = require('passport-jwt').ExtractJwt,
     User =  require('../app/models/user'),
@@ -13,14 +13,14 @@ const localOptions = { usernameField: 'email' },
     };
 
 module.exports = function(passport) {
-    const localLogin = new LocalStrategy(localOptions, function(email, password, done) {
+    const localLogin = new BasicStrategy(localOptions, function(email, password, done) {
         User.findOne({email: email}, function(err, user) {
             if (err) return done(err);
             if (!user) return done(null, false, {message: 'Authentication failed. User not found.'});
             // User exists in db, so compare passwords and assign token
             user.comparePassword(password, function(err, isMatch) {
                 if (err) return done(err);
-                if (!isMatch) res.json({ success: false, message: 'Authentication failed. Wrong password'});
+                if (!isMatch) return done({ success: false, message: 'Authentication failed. Wrong password'});
                 // Correct user and password params so create token
                 return done(null, user);
             });
