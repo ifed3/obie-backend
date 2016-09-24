@@ -1,8 +1,6 @@
 const StripeWebHook = require('stripe-webhook-middleware'),
     express = require('express'),
     config = require('./'),
-    passport = require('passport'),
-    passportService = require('./passport'),
     router = express.Router(),
     authRouter = express.Router();
 
@@ -28,16 +26,20 @@ module.exports = function(app, passport) {
 
     // Set strategies for passport authentication
     const requireAuth = passport.authenticate('jwt', {session: false}),
-    requireLogin = passport.authenticate('local', {session: false});
+        requireLogin = passport.authenticate('local', {session: false});
 
     // Perform authentication
     authRouter.post('/login', requireLogin, authentication.login);
     authRouter.post('/register', authentication.register);
     router.use('/auth', authRouter);
 
-    router.get('/', requireAuth, function(req, res) {
+    router.get('/', function(req, res) {
         res.json({ message: 'obie-stripe-api' })
     });
+
+    // router.get('/', requireAuth, function(req, res) {
+    //     res.json({ message: 'obie-stripe-api' })
+    // });    
 
     // Set routing for user api calls
     router.get('/users', requireAuth, authentication.roleAuth('owner'), user.index);

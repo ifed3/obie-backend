@@ -65,7 +65,6 @@ exports.register = function(req, res, next) {
 
 exports.roleAuth = function(role) {
     return function(req, res, next) {
-        debugger;
         if (!req.isAuthenticated()) return next('Unauthorized');
         const user = req.user
         User.findById(user._id, function(err, user) {

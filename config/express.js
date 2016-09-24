@@ -6,7 +6,7 @@ const fs = require("fs"),
     express = require('express'),
     passport = require('passport'),
     passportService = require('./passport'),
-    jwt = require('jsonwebtoken'),
+    router = require('../config/routes'),
     config = require('./');
 
 const env = process.env.NODE_ENV;
@@ -35,7 +35,6 @@ app.use(function(req, res, next) {
     next(); 
 });
 
-const router = require('../config/routes');
 router(app, passport);
 
 module.exports = app;
