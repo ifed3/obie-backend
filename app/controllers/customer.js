@@ -6,11 +6,12 @@ const User = require('../../app/models/user'),
 
 // Retrieve customer object for logged in user
 exports.show = function(req, res, next) {
-    const userId = req.user._id;
-    User.findById(userId, function(err, user) {
+    const id = req.user._id;
+    User.findById(id, function(err, user) {
         if (err) return next(err);
         stripe.customers.retrieve(user.stripe.customerId, function(err, customer) {
             if (err) return res.status(402).send('Error retrieving customer');
+            console.log(customer)
             res.json(customer);
             next();
         });
@@ -19,8 +20,8 @@ exports.show = function(req, res, next) {
 
 // List of payment methods for customer
 exports.sources = function(req, res) {
-    const userId = req.user._id;
-    User.findById(userId, function(err, user) {
+    const id = req.user._id;
+    User.findById(id, function(err, user) {
         if (err) return next(err);
         stripe.customers.createSource(user.stripe.customerId, 
             {source: req.body.source}, function(err, source) {
@@ -33,8 +34,8 @@ exports.sources = function(req, res) {
 
 // Default payment method for customer
 exports.source = function(req, res) {
-    const userId = req.user._id;
-    User.findById(userId, function(err, user) {
+    const id = req.user._id;
+    User.findById(id, function(err, user) {
         if (err) return next(err);
         stripe.customers.createSource(user.stripe.customerId, 
             {default_source: req.body.defaultSource}, function(err, customer) {
