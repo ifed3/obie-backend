@@ -11,7 +11,6 @@ exports.show = function(req, res, next) {
         if (err) return next(err);
         stripe.customers.retrieve(user.stripe.customerId, function(err, customer) {
             if (err) return res.status(402).send('Error retrieving customer');
-            console.log(customer)
             res.json(customer);
             next();
         });
@@ -27,7 +26,6 @@ exports.sources = function(req, res) {
             {source: req.body.source}, function(err, source) {
                 if (err) return res.status(402).send('Error attaching source.');
                 res.status(200).end();
-                next();
             });
     });
 }
@@ -41,7 +39,6 @@ exports.source = function(req, res) {
             {default_source: req.body.defaultSource}, function(err, customer) {
                 if (err) return res.status(402).send('Error setting default source.');
                 res.status(200).end();
-                next();
             });
     });
 }
