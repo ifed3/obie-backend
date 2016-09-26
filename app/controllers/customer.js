@@ -35,7 +35,7 @@ exports.source = function(req, res) {
     const id = req.user._id;
     User.findById(id, function(err, user) {
         if (err) return next(err);
-        stripe.customers.createSource(user.stripe.customerId, 
+        stripe.customers.update(user.stripe.customerId, 
             {default_source: req.body.defaultSource}, function(err, customer) {
                 if (err) return res.status(402).send('Error setting default source.');
                 res.status(200).end();
