@@ -8,10 +8,11 @@ const StripeWebHook = require('stripe-webhook-middleware'),
 const authentication = require('../app/controllers/authentication'), 
     user = require('../app/controllers/user'),
     customer = require('../app/controllers/customer'),
-    payment = require('../app/controllers/payment');
+    payment = require('../app/controllers/payment'),
+    stripe_events = require('../app/controllers/stripe_webhooks');
 
 // Create stripe webhook object
-const stripeWebjook = new StripeWebHook({
+const stripeWebhook = new StripeWebHook({
     stripeApiKey: config.stripeOptions.apiKey,
     respond: true
 });
@@ -61,6 +62,8 @@ module.exports = function(app, passport) {
     router.post('/customer/sources', requireAuth, customer.sources);
     // Select card source endpoint    
     router.post('/customer/source', requireAuth, customer.source) 
+
+    router.post('/stripe/events', stripeWebhook.middleware, stripe_events)
 
     // Set all routes to be prefixed with apis
     app.use('/api', router);                         
