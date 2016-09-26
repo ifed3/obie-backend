@@ -28,7 +28,9 @@ app.use(passport.initialize());
 passportService(passport);
 
 // Log request to console
-app.use(logger('dev'));
+if (env == "production") {
+    app.use(logger('dev'));
+}
 
 app.use(function(req, res, next) {
     res.locals.stripePubKey = config.stripeOptions.stripePubKey;
