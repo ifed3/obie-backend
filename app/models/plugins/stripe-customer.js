@@ -9,6 +9,7 @@ module.exports = function stripeCustomer(schema, options) {
     // Add stripe properties to company schema
     schema.add({
         stripe: {
+            token: String,
             customerId: String,
             subscriptionId: String,
             last4: String,

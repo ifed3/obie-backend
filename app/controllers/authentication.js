@@ -37,7 +37,9 @@ exports.register = function(req, res, next) {
     const email = req.body.email,
         name = req.body.profile.name,
         company = req.body.profile.company,
-        password = req.body.password;
+        password = req.body.password,
+        plan = req.body.stripe.plan
+        stripe_token = req.body.stripe.token
 
     // Error checking
     if (!email) return res.status(422).send({ error: 'You must enter an email address'});
@@ -53,13 +55,19 @@ exports.register = function(req, res, next) {
         let user = new User(req.body);
         user.save(function(err) {
             if (err) return next(err);
-            console.log("User succesfully created")
-            // Respond with json web token upon succesfull creation
-            let userInfo = setUserInfo(user);
-            res.status(200).json({
-                token: 'JWT ' + generateToken(userInfo), 
-                user: userInfo
-            });
+            user.setCard(stripe_token, function(err) {
+                if (err) return next(err);
+                user.setPlan(plan, stripe_token, function(err) {
+                    if (err) return next(err);
+                    console.log("User succesfully created")
+                    // Respond with json web token upon succesfull creation
+                    let userInfo = setUserInfo(user);
+                    res.status(200).json({
+                        token: 'JWT ' + generateToken(userInfo), 
+                        user: userInfo
+                    });
+                });
+            })
         });
     });
 }
