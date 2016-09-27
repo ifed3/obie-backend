@@ -216,6 +216,6 @@ module.exports = function(req, res, next) {
   if(req.stripeEvent && req.stripeEvent.type && knownEvents[req.stripeEvent.type]){
     knownEvents[req.stripeEvent.type](req, res, next);
   } else {
-    return next(new Error('Stripe Event not found'));
+    return next(new Error('Stripe Event ' + req.stripeEvent.type + ' not found'));
   }
 };

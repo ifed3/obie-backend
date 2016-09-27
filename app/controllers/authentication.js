@@ -56,7 +56,7 @@ exports.register = function(req, res, next) {
             if (err) return next(err);
             user.setCard(stripe_token, function(err) {
                 if (err) return next(err);
-                user.setPlan(plan, stripe_token, function(err) {
+                user.setPlan(user.stripe.plan, stripe_token, function(err) {
                     if (err) return next(err);
                     console.log("User succesfully created")
                     // Respond with json web token upon succesfull creation
