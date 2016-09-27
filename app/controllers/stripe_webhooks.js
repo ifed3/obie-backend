@@ -79,6 +79,18 @@ var knownEvents = {
     console.log(req.stripeEvent.type + ': event processed');
     res.status(200).end();
   },
+  'customer.source.created': function(req, res, next) {
+    console.log(req.stripeEvent.type + ': event processed');
+    res.status(200).end();
+  },
+  'customer.source.updated': function(req, res, next) {
+    console.log(req.stripeEvent.type + ': event processed');
+    res.status(200).end();
+  },
+  'customer.source.deleted': function(req, res, next) {
+    console.log(req.stripeEvent.type + ': event processed');
+    res.status(200).end();
+  },
   'customer.subscription.created': function(req, res, next) {
     console.log(req.stripeEvent.type + ': event processed');
     res.status(200).end();
