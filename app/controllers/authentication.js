@@ -38,7 +38,6 @@ exports.register = function(req, res, next) {
         name = req.body.profile.name,
         company = req.body.profile.company,
         password = req.body.password,
-        plan = req.body.stripe.plan
         stripe_token = req.body.stripe.token
 
     // Error checking
