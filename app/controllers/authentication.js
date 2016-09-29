@@ -56,7 +56,7 @@ exports.register = function(req, res, next) {
             if (err) return next(err);
             user.setPlan(user.stripe.plan, stripe_token, function(err) {
                 if (err) return next(err);
-                console.log("User succesfully created and subscription to " + user.stripe.plan + " plan")
+                console.log("User succesfully created and subscribed to " + user.stripe.plan + " plan")
                 // Respond with json web token upon succesfull creation
                 let userInfo = setUserInfo(user);
                 res.status(200).json({
