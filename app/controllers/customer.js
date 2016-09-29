@@ -13,7 +13,7 @@ exports.update_plan = function(req, res, next) {
         if (err) return next(err);
         user.setPlan(plan, stripe_token, function(err) {
             if (err) return next(err);
-            res.status(200).end
+            res.status(200).end();
         });
     });
 }
