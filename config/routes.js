@@ -49,19 +49,21 @@ module.exports = function(app, passport) {
         .put(user.update)
         .delete(user.destroy); 
 
-    // Set routing for charges to a user
-    router.get('/charge', requireAuth, payment.index);
-    router.get('/charge/:charge_id', requireAuth, payment.show);  
+    ruoter.put('/subscription', requireAuth, customer.update_plan)
 
-    /* iOS Stripe integration
-    */
+    // // Set routing for charges to a user
+    // router.get('/charge', requireAuth, payment.index);
+    // router.get('/charge/:charge_id', requireAuth, payment.show);  
 
-    // Retrieve customer endpoint
-    router.get('/customer', requireAuth, customer.show);
-    // Create card endpoint    
-    router.post('/customer/sources', requireAuth, customer.sources);
-    // Select card source endpoint    
-    router.post('/customer/source', requireAuth, customer.source) 
+    // /* iOS Stripe integration
+    // */
+
+    // // Retrieve customer endpoint
+    // router.get('/customer', requireAuth, customer.show);
+    // // Create card endpoint    
+    // router.post('/customer/sources', requireAuth, customer.sources);
+    // // Select card source endpoint    
+    // router.post('/customer/source', requireAuth, customer.source) 
 
     router.post('/stripe/events', stripeWebhook.middleware, stripe_events)
 
