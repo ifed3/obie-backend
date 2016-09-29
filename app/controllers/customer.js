@@ -4,6 +4,20 @@ const User = require('../../app/models/user'),
     config = require('../../config'),
     stripe = require('stripe')(config.stripeOptions.apiKey);
 
+// Update subscription plan
+exports.update_plan = function(req, res, next) {
+    const id = req.user.id
+    const plan = req.body.plan
+    const stripe_token = req.body.token
+    User.findbyId(id, function(err, user) {
+        if (err) return next(err);
+        user.setPlan(plan, stripe_token, function(err) {
+            if (err) return next(err);
+            res.status(200).end
+        });
+    });
+}
+
 // Retrieve customer object for logged in user
 exports.show = function(req, res, next) {
     const id = req.user._id;
@@ -18,7 +32,7 @@ exports.show = function(req, res, next) {
 }
 
 // List of payment methods for customer
-exports.sources = function(req, res) {
+exports.sources = function(req, res, next) {
     const id = req.user._id;
     User.findById(id, function(err, user) {
         if (err) return next(err);
@@ -31,7 +45,7 @@ exports.sources = function(req, res) {
 }
 
 // Default payment method for customer
-exports.source = function(req, res) {
+exports.source = function(req, res, next) {
     const id = req.user._id;
     User.findById(id, function(err, user) {
         if (err) return next(err);

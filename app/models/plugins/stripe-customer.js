@@ -65,7 +65,7 @@ module.exports = function stripeCustomer(schema, options) {
             });
         };
 
-        // Update card to stripe_token 
+        // Create stripe customer if non-existent
         if(!user.stripe.customerId) {
             stripe.customers.create({
                 email: user.email,
@@ -100,22 +100,20 @@ module.exports = function stripeCustomer(schema, options) {
             );
         };
 
-        if(stripe_token) {
+        if(user.stripe.subscriptionId) { // Customer already is subscribed to a plan so update plan
+            stripe.customers.updateSubscription(
+                user.stripe.customerId,
+                user.stripe.subscriptionId,
+                customerPlan,
+                subscriptionHandler
+            )
+        } else if (stripe_token) { // Customer has card so subscribe to plan and charge
             user.setCard(stripe_token, function(err){
                 if (err) return callback(err);
                 createSubscription();
             });
-        } else {
-            if(user.stripe.subscriptionId) {
-                stripe.customers.updateSubscription(
-                    user.stripe.customerId,
-                    user.stripe.subscriptionId,
-                    customerPlan,
-                    subscriptionHandler
-                )
-            } else {
-                createSubscription()
-            }
+        } else { // Customer has no card yet, but still susbcribe to plan
+            createSubscription()
         }
     };
 
