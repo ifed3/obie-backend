@@ -49,7 +49,7 @@ module.exports = function(app, passport) {
         .put(user.update)
         .delete(user.destroy); 
 
-    ruoter.put('/subscription', requireAuth, customer.update_plan)
+    router.put('/subscription', requireAuth, customer.update_plan)
 
     // // Set routing for charges to a user
     // router.get('/charge', requireAuth, payment.index);
