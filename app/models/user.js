@@ -3,7 +3,8 @@
 const mongoose = require('mongoose'),
     bcrypt = require('bcrypt'),
     stripeOptions = require('../../config').stripeOptions,
-    stripeCustomer = require('./plugins/stripe-customer');
+    stripeCustomer = require('./plugins/stripe-customer'),
+    campaign = require('./campaign');
 
 var UserSchema = new mongoose.Schema({
     email: { 
@@ -36,6 +37,7 @@ var UserSchema = new mongoose.Schema({
 
 // Extend schema with stripe attributes
 UserSchema.plugin(stripeCustomer, stripeOptions);
+UserSchema.plugin(campaign);
 
 //  Hash (with random salt) user's password
 UserSchema.pre('save', function(next) {
