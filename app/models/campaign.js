@@ -24,25 +24,44 @@ module.exports = function userCampaign(schema) {
     {
         timestamps: true
     });
-    
-    // Create campaign stages
-    let CampaignStage = mongoose.model('CampaignStage', CampaignStagesSchema);
-    let start = new CampaignStage, 
-        discover = new CampaignStage({ name: 'Discover' }),
-        contact = new CampaignStage({ name: 'Contact' }),
-        manage = new CampaignStage({ name: 'Manage' }),
-        launch = new CampaignStage({ name: 'Launch' });
 
     var CampaignSchema = new mongoose.Schema({
         influencers: [InfluencerSchema],
-        stages: [start, discover, contact, manage, launch],
+        stages: [CampaignStagesSchema],
+    });
+
+    schema.add({
+        campaigns: [CampaignSchema]
+    });
+
+    // Create campaign stages
+    let CampaignStage = mongoose.model('CampaignStage', CampaignStagesSchema);
+    var stagesArray = []
+    stagesArray.push(new CampaignStage({ name: 'Start', status: false })); 
+    stagesArray.push(new CampaignStage({ name: 'Discover', status: false }));
+    stagesArray.push(new CampaignStage({ name: 'Contact', status: false }));
+    stagesArray.push(new CampaignStage({ name: 'Manage', status: false }));
+    stagesArray.push(new CampaignStage({ name: 'Launch', status: false }));
+
+    schema.pre('save', function(next) {
+        var user = this;
+        if (!this.campaigns || this.campaigns.length == 0) {
+            this.campaigns = [];
+            this.campaigns.push({ 
+                influencers: [],
+                stages: []
+            });
+
+            this.campaigns.forEach(function(campaign) {
+                if (!campaign.stages || campaign.stages.length == 0) {
+                    campaign.stages = stagesArray;
+                }
+            });
+        }
+        next();
     });
 
     // Create campaign array
     let Campaign = mongoose.model('Campaign', CampaignSchema);
     var campaign = new Campaign()
-
-    schema.add({
-        campaigns: [campaign]
-    });
 }
