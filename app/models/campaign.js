@@ -34,12 +34,8 @@ module.exports = function userCampaign(schema) {
         launch = new CampaignStage({ name: 'Launch' });
 
     var CampaignSchema = new mongoose.Schema({
-        influencers: {type: [InfluencerSchema]},
-        stages: {
-            type: [CampaignStagesSchema],
-            default: [start, discover, contact, manage, launch],
-            required: true
-        }
+        influencers: [InfluencerSchema],
+        stages: [start, discover, contact, manage, launch],
     });
 
     // Create campaign array
@@ -47,9 +43,6 @@ module.exports = function userCampaign(schema) {
     var campaign = new Campaign()
 
     schema.add({
-        campaigns: {
-            type: [CampaignSchema],
-            default: [campaign]
-        }
+        campaigns: [campaign]
     });
 }
