@@ -30,54 +30,44 @@ module.exports = function userCampaign(schema) {
         campaigns: [CampaignSchema]
     });
 
-    schema.methods.createCampaign = function(name, influencers, callback) {
+    schema.methods.setCampaign = function(name, influencers, stage_name, callback) {
         var user = this;
-        let CampaignStage = mongoose.model('CampaignStage', CampaignStagesSchema)
-        let campaignStage = new CampaignStage({ name: 'Start', status: true })
-        if (!user.campaigns || users.campaigns.length == 0) {
-            // Initialize campaigns array
+
+        let CampaignStage = mongoose.model('CampaignStage', CampaignStagesSchema);
+        let stage = new CampaignStage({ name: stage_name, status: true });
+
+        var createCampaign = function(name, influencers, stage_name, callback) {
             user.campaigns = [];
             users.campaigns.push({
                 name: name,
                 influencers: influencers.length == 0 ? [] : influencers,
-                stages: [campaignStage]
-            });
+                stages: [stage]
+            });        
         };
+
+        var updateCampaign = function(name, influencers, stage_name, callback) {
+            campaign = users.campaigns.find({name: name});
+            if (!campaign) {
+                return callback(new Error("Campaign with provided name could not be found"));
+            }
+            // Update campaign influencers
+            campaign.influencers = influencers.length == 0 ? [] : influencers;
+            // Initialize stages array if non-existent
+            if (!campaign.stages || campaign.stages.length == 0) {
+                campaign.stages = [];
+            }
+            campaign.stages.push(stage)
+        }
+
+        if (!user.campaigns || users.campaigns.length == 0) {
+            createCampaign(name, influencers, stage_name, callback);
+        } else {
+            updateCampaign(name, influencers, stage_name, callback);
+        }
+
         user.save(function(err) {
             if (err) return callback(err);
             return callback(null);
-        });    
+        });   
     };
-
-    schema.methods.updateCampaign = function(name, influencers, stage, callback) {
-        var user = this;
-        // Find campaign with name
-        if (!user.campaigns || users.campaigns.length == 0) {
-            // Initialize campaigns array
-            user.campaigns = [];
-        }
-        users.campaigns.push({
-            name: name,
-            influencers: influencers.length == 0 ? [] : influencers,
-            stages: [campaignStage]
-        });
-    }
-
-    // schema.pre('save', function(next) {
-    //     var user = this;
-    //     if (!this.campaigns || this.campaigns.length == 0) {
-    //         this.campaigns = [];
-    //         this.campaigns.push({ 
-    //             influencers: [],
-    //             stages: []
-    //         });
-
-    //         this.campaigns.forEach(function(campaign) {
-    //             if (!campaign.stages || campaign.stages.length == 0) {
-    //                 campaign.stages = stagesArray;
-    //             }
-    //         });
-    //     }
-    //     next();
-    // });
 }

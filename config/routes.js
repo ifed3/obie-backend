@@ -7,6 +7,7 @@ const StripeWebHook = require('stripe-webhook-middleware'),
 // Get controllers
 const authentication = require('../app/controllers/authentication'), 
     user = require('../app/controllers/user'),
+    campaign = require('../app/controllers/campaign'),
     customer = require('../app/controllers/customer'),
     payment = require('../app/controllers/payment'),
     stripe_events = require('../app/controllers/stripe_webhooks');
@@ -34,13 +35,22 @@ module.exports = function(app, passport) {
     authRouter.post('/register', authentication.register);
     router.use('/auth', authRouter);
 
-    router.get('/', function(req, res) {
-        res.json({ message: 'obie-stripe-api' })
-    });
+    // Set routing for stripe subscription and webhook
+    router.put('/subscription', requireAuth, customer.update_plan)
+    router.post('/stripe/events', stripeWebhook.middleware, stripe_events)
 
-    // router.get('/', requireAuth, function(req, res) {
-    //     res.json({ message: 'obie-stripe-api' })
-    // });    
+    // Test route for ensuring authentication is working
+    router.get('/', requireAuth, function(req, res) {
+        res.json({ message: 'obie-api' })
+    });  
+
+    // Set routing for campaign calls
+    router.get('/campaigns', requireAuth, campaign.index)
+    router.route('/campaign', requireAuth)
+        .get(campaign.show)
+        .put(campaign.set)
+        .post(campaign.set)
+        .delete(campaign.destroy)
 
     // Set routing for user api calls
     router.get('/users', requireAuth, authentication.roleAuth('owner'), user.index);
@@ -48,24 +58,6 @@ module.exports = function(app, passport) {
         .get(user.show)
         .put(user.update)
         .delete(user.destroy); 
-
-    router.put('/subscription', requireAuth, customer.update_plan)
-
-    // // Set routing for charges to a user
-    // router.get('/charge', requireAuth, payment.index);
-    // router.get('/charge/:charge_id', requireAuth, payment.show);  
-
-    // /* iOS Stripe integration
-    // */
-
-    // // Retrieve customer endpoint
-    // router.get('/customer', requireAuth, customer.show);
-    // // Create card endpoint    
-    // router.post('/customer/sources', requireAuth, customer.sources);
-    // // Select card source endpoint    
-    // router.post('/customer/source', requireAuth, customer.source) 
-
-    router.post('/stripe/events', stripeWebhook.middleware, stripe_events)
 
     // Set all routes to be prefixed with apis
     app.use('/api', router);                         

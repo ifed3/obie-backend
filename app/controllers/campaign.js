@@ -7,18 +7,19 @@ exports.index = function(req, res) {
     const id = req.user.id
     User.findById(id, function(err, user) {
         if (err) res.send(err);
-        res.json(user.campaigns);
+        res.status(200).json(user.campaigns);
     })
 }
 
-// Create a new campagin
-exports.create = function(req, res) {
+// Update or create campaign campaign
+exports.set = function(req, res) {
     const id = req.user.id
     const name = req.body.campaign_name
     const influencers = req.body.influencers
+    const stage = req.body.stage_name
     User.findById(id, function(err, user) {
         if (err) res.send(err);
-        user.createCampaign(name, influencers, function(err) {
+        user.setCampaign(name, influencers, stage, function(err) {
             if (err) res.send(err);
             res.status(200);
         });
@@ -27,28 +28,22 @@ exports.create = function(req, res) {
 
 // Show campaign
 exports.show = function(req, res) {
-    User.findById(req.params.company_id, function(err, user) {
+    const id = req.user.id
+    const name = req.body.name
+    User.findById(id, function(err, user) {
         if (err) res.send(err);
-        res.json(user);
-    });
-}
-
-// Update campaign
-exports.update = function(req, res) {
-    User.findById(req.params.company_id, function(err, user) {
-        if (err) res.send(err);
-        //Update user info here
-        user.save(function(err) {
-            if (err) res.send(err);
-            res.json({ message: 'User updated' });
-        });
+        let campaign = user.campaign.find({name: name})
+        if (!campaign) res.status(422).json({ error: 'Campaign was not found'})
+        res.status(200);
     });
 }
 
 // Remove campaign
 exports.destroy = function(req, res) {
-    User.remove({_id: req.params.company_id}, function(err, companies) {
-        if (err) res.send(err);
-        res.json({ message: 'User deleted'});
-    });
+    // User.findById(id, function(err, user) {
+    //     if (err) res.send(err);
+    //     user.campaigns.pull()
+    //     let campaign: user.campaign.find({name: name})
+    //     res.status(200).json(user);
+    // });
 }
