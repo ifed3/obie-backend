@@ -11,21 +11,17 @@ module.exports = function userCampaign(schema) {
     });
 
     var CampaignStagesSchema = new mongoose.Schema({
-        stage: {
-            name: {
-                type: String, 
-                enum: ['Start', 'Discover', 'Contact', 'Manage', 'Launch'],
-                default: 'Start',
-                required: true
-            },
-            status: {type: Boolean, default: false, required: true},
-        }
-    },
-    {
-        timestamps: true
+        name: {
+            type: String, 
+            enum: ['Start', 'Discover', 'Contact', 'Manage', 'Launch'],
+            required: true
+        },
+        status: {type: Boolean, required: true},
+        created: {type: Date, default: Date.now}
     });
 
     var CampaignSchema = new mongoose.Schema({
+        name: {type: String, required: true},
         influencers: [InfluencerSchema],
         stages: [CampaignStagesSchema],
     });
@@ -34,34 +30,54 @@ module.exports = function userCampaign(schema) {
         campaigns: [CampaignSchema]
     });
 
-    // Create campaign stages
-    let CampaignStage = mongoose.model('CampaignStage', CampaignStagesSchema);
-    var stagesArray = []
-    stagesArray.push(new CampaignStage({ name: 'Start', status: false })); 
-    stagesArray.push(new CampaignStage({ name: 'Discover', status: false }));
-    stagesArray.push(new CampaignStage({ name: 'Contact', status: false }));
-    stagesArray.push(new CampaignStage({ name: 'Manage', status: false }));
-    stagesArray.push(new CampaignStage({ name: 'Launch', status: false }));
-
-    schema.pre('save', function(next) {
+    schema.methods.createCampaign = function(name, influencers, callback) {
         var user = this;
-        if (!this.campaigns || this.campaigns.length == 0) {
-            this.campaigns = [];
-            this.campaigns.push({ 
-                influencers: [],
-                stages: []
+        let CampaignStage = mongoose.model('CampaignStage', CampaignStagesSchema)
+        let campaignStage = new CampaignStage({ name: 'Start', status: true })
+        if (!user.campaigns || users.campaigns.length == 0) {
+            // Initialize campaigns array
+            user.campaigns = [];
+            users.campaigns.push({
+                name: name,
+                influencers: influencers.length == 0 ? [] : influencers,
+                stages: [campaignStage]
             });
+        };
+        user.save(function(err) {
+            if (err) return callback(err);
+            return callback(null);
+        });    
+    };
 
-            this.campaigns.forEach(function(campaign) {
-                if (!campaign.stages || campaign.stages.length == 0) {
-                    campaign.stages = stagesArray;
-                }
-            });
+    schema.methods.updateCampaign = function(name, influencers, stage, callback) {
+        var user = this;
+        // Find campaign with name
+        if (!user.campaigns || users.campaigns.length == 0) {
+            // Initialize campaigns array
+            user.campaigns = [];
         }
-        next();
-    });
+        users.campaigns.push({
+            name: name,
+            influencers: influencers.length == 0 ? [] : influencers,
+            stages: [campaignStage]
+        });
+    }
 
-    // Create campaign array
-    let Campaign = mongoose.model('Campaign', CampaignSchema);
-    var campaign = new Campaign()
+    // schema.pre('save', function(next) {
+    //     var user = this;
+    //     if (!this.campaigns || this.campaigns.length == 0) {
+    //         this.campaigns = [];
+    //         this.campaigns.push({ 
+    //             influencers: [],
+    //             stages: []
+    //         });
+
+    //         this.campaigns.forEach(function(campaign) {
+    //             if (!campaign.stages || campaign.stages.length == 0) {
+    //                 campaign.stages = stagesArray;
+    //             }
+    //         });
+    //     }
+    //     next();
+    // });
 }

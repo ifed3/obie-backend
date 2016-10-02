@@ -9,13 +9,13 @@ function generateToken(user) {
     return jwt.sign(user, config.secret, {expiresIn: expirationSeconds});
 }
 
-function setUserInfo(req) {
+function setUserInfo(user) {
     return {
-        _id: req._id,
-        name: req.profile.name,
-        company: req.profile.company,
-        email: req.email,
-        role: req.role
+        _id: user._id,
+        name: user.profile.name,
+        company: user.profile.company,
+        email: user.email,
+        role: user.role
     }
 };
 
