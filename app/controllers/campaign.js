@@ -7,8 +7,8 @@ exports.index = function(req, res) {
     const id = req.user.id
     User.findById(id, function(err, user) {
         if (err) res.send(err);
-        res.status(200).json(user.campaigns);
-    })
+        res.status(200).json({campaigns: user.campaigns});
+    });
 }
 
 // Update or create campaign campaign
@@ -34,7 +34,7 @@ exports.show = function(req, res) {
         if (err) res.send(err);
         let campaign = user.campaign.find({name: name})
         if (!campaign) res.status(422).json({ error: 'Campaign was not found'})
-        res.status(200);
+        res.status(200).json({campaign: campaign});
     });
 }
 

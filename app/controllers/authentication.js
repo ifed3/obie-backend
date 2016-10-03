@@ -15,7 +15,8 @@ function setUserInfo(user) {
         name: user.profile.name,
         company: user.profile.company,
         email: user.email,
-        role: user.role
+        role: user.role,
+        campaigns: user.campaigns
     }
 };
 
