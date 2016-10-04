@@ -7,7 +7,8 @@ const mongoose = require('mongoose');
 module.exports = function userCampaign(schema) {
     var InfluencerSchema = new mongoose.Schema({
         name: {type: String, required: true},
-        image: {type: String, required: true}
+        image: {type: String, required: true},
+        location: {type: String}
     });
 
     var CampaignStagesSchema = new mongoose.Schema({
@@ -87,7 +88,11 @@ module.exports = function userCampaign(schema) {
         var campaign = getCampaign(user.campaigns, name, callback);
 
         // Update campaign influencers
-        campaign.influencers = influencers.length == 0 ? [] : influencers;
+        if (campaign.influencers.length < 1) { //
+            campaign.influencers = [];
+        } else { // Push array elements into existing array
+            campaign.influencers.push.apply(campaign.influencers, influencers);
+        }
 
         // Initialize stages array if non-existent
         if (!campaign.stages || campaign.stages.length == 0) {
