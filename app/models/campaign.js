@@ -88,7 +88,7 @@ module.exports = function userCampaign(schema) {
         var campaign = getCampaign(user.campaigns, name, callback);
 
         // Update campaign influencers
-        if (campaign.influencers.length < 1) { //
+        if (campaign.influencers.length < 1 && influencers.length == 0) { //
             campaign.influencers = [];
         } else { // Push array elements into existing array
             campaign.influencers.push.apply(campaign.influencers, influencers);
