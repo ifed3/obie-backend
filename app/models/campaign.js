@@ -21,48 +21,88 @@ module.exports = function userCampaign(schema) {
     });
 
     var CampaignSchema = new mongoose.Schema({
-        name: {type: String, required: true},
+        name: {type: String, required: true, unique: true},
         influencers: [InfluencerSchema],
         stages: [CampaignStagesSchema],
     });
+
+    let CampaignStage = mongoose.model('CampaignStage', CampaignStagesSchema);
 
     schema.add({
         campaigns: [CampaignSchema]
     });
 
-    schema.methods.setCampaign = function(name, influencers, stage_name, callback) {
+    var getCampaign = function(campaigns, name, callback) {
+        // Check for campaign existence
+        var campaign = campaigns.filter(function(campaign) {
+            return campaign.name === name;
+        })[0]
+        if (!campaign) return callback(new Error("Campaign does not exist"));
+        return campaign;
+    }
+
+    schema.methods.showCampaign = function(name, callback) {
+        return callback(null, getCampaign(this.campaigns, name, callback));
+    }
+
+    schema.methods.createCampaign = function(name, influencers, callback) {
         var user = this;
+        // Prevent duplicate campaign naming
+        var campaignFilterArray = user.campaigns.filter(function(campaign) {
+            return campaign.name === name;
+        });
+        if (campaignFilterArray.length > 0) return callback(new Error(name + " campaign already exists"));
 
-        let CampaignStage = mongoose.model('CampaignStage', CampaignStagesSchema);
-        let stage = new CampaignStage({ name: stage_name, status: true });
-
-        var createCampaign = function(name, influencers, stage_name, callback) {
+        if (!user.campaigns || user.campaigns.length == 0) { // Initialize campaigns array
             user.campaigns = [];
-            users.campaigns.push({
-                name: name,
-                influencers: influencers.length == 0 ? [] : influencers,
-                stages: [stage]
-            });        
-        };
-
-        var updateCampaign = function(name, influencers, stage_name, callback) {
-            campaign = users.campaigns.find({name: name});
-            if (!campaign) {
-                return callback(new Error("Campaign with provided name could not be found"));
-            }
-            // Update campaign influencers
-            campaign.influencers = influencers.length == 0 ? [] : influencers;
-            // Initialize stages array if non-existent
-            if (!campaign.stages || campaign.stages.length == 0) {
-                campaign.stages = [];
-            }
-            campaign.stages.push(stage)
         }
 
-        if (!user.campaigns || users.campaigns.length == 0) {
-            createCampaign(name, influencers, stage_name, callback);
+        let stage = new CampaignStage({ name: 'Start', status: true });
+        user.campaigns.push({
+            name: name,
+            influencers: influencers.length == 0 ? [] : influencers,
+            stages: [stage]
+        });   
+
+        user.save(function(err) {
+            if (err) return callback(err);
+            return callback(null);
+        });                    
+    };
+
+    schema.methods.deleteCampaign = function(name, callback) {
+        let user = this;
+        let campaign = getCampaign(user.campaigns, name, callback);
+        return callback(new Error("Delete functionality not yet implemented"));
+        // user.save(function(err) {
+        //     if (err) return callback(err);
+        //     return callback(null);
+        // }); 
+    }
+
+    schema.methods.updateCampaign = function(name, influencers, stage_name, callback) {
+        var user = this;
+
+        // Check for campaign existence
+        var campaign = getCampaign(user.campaigns, name, callback);
+
+        // Update campaign influencers
+        campaign.influencers = influencers.length == 0 ? [] : influencers;
+
+        // Initialize stages array if non-existent
+        if (!campaign.stages || campaign.stages.length == 0) {
+            campaign.stages = [];
+        }
+
+        // Add a stage to stages array only anew
+        var stageFilterArray = campaign.stages.filter(function(stage) {
+            return stage.name === stage_name;
+        });
+        if (stageFilterArray.length < 1) {
+            let stage = new CampaignStage({ name: stage_name, status: true });
+            campaign.stages.push(stage)
         } else {
-            updateCampaign(name, influencers, stage_name, callback);
+            return callback(new Error(stage_name + " stage of campaign already exists"));
         }
 
         user.save(function(err) {

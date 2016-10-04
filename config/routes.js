@@ -45,12 +45,11 @@ module.exports = function(app, passport) {
     });  
 
     // Set routing for campaign calls
-    router.get('/campaigns', requireAuth, campaign.index)
-    router.route('/campaign', requireAuth)
-        .get(campaign.show)
-        .put(campaign.set)
-        .post(campaign.set)
-        .delete(campaign.destroy)
+    router.get('/campaigns', requireAuth, campaign.index);
+    router.get('/campaign', requireAuth, campaign.show);
+    router.post('/campaign', requireAuth, campaign.create);
+    router.put('/campaign', requireAuth, campaign.update);
+    router.delete('/campaign', requireAuth, campaign.destroy);
 
     // Set routing for user api calls
     router.get('/users', requireAuth, authentication.roleAuth('owner'), user.index);
