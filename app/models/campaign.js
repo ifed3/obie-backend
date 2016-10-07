@@ -22,9 +22,9 @@ module.exports = function userCampaign(schema) {
     });
 
     var CampaignSchema = new mongoose.Schema({
-        name: {type: String, required: true, unique: true},
+        name: {type: String, required: true},
         influencers: [InfluencerSchema],
-        stages: [CampaignStagesSchema],
+        stages: [CampaignStagesSchema]
     });
 
     let CampaignStage = mongoose.model('CampaignStage', CampaignStagesSchema);
