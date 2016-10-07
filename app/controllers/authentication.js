@@ -13,6 +13,7 @@ function setUserInfo(user) {
     return {
         _id: user._id,
         name: user.profile.name,
+        stripe: user.stripe,
         company: user.profile.company,
         email: user.email,
         role: user.role,
@@ -24,6 +25,10 @@ function setUserInfo(user) {
 //   if (!req.isAuthenticated()) return next();
 //   next();
 // }
+
+exports.check_email = function(req, res) {
+    const email = req.query.email
+}
 
 exports.login = function(req, res) {
     let userInfo = setUserInfo(req.user);
