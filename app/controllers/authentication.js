@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken'),
     expirationSeconds = 60*60*24, // 24 hours in seconds
     User = require('../../app/models/user');
 
+const FIRST_CAMPAIGN_TITLE = "My First Campaign";    
+
 function generateToken(user) {
     return jwt.sign(user, config.secret, {expiresIn: expirationSeconds});
 }
@@ -70,14 +72,17 @@ exports.register = function(req, res, next) {
             if (err) return next(err);
             user.setPlan(user.stripe.plan, stripe_token, function(err) {
                 if (err) return next(err);
-                console.log("User succesfully created and subscribed to " + user.stripe.plan + " plan")
-                // Respond with json web token upon succesfull creation
-                let userInfo = setUserInfo(user);
-                res.status(200).json({
-                    token: 'JWT ' + generateToken(userInfo), 
-                    user: userInfo
+                 user.createCampaign(FIRST_CAMPAIGN_TITLE, [], function(err) {
+                    if (err) return next(err);
+                    console.log("User succesfully created and subscribed to " + user.stripe.plan + " plan")
+                    // Respond with json web token upon succesfull creation
+                    let userInfo = setUserInfo(user);
+                    res.status(200).json({
+                        token: 'JWT ' + generateToken(userInfo), 
+                        user: userInfo
+                    });
                 });
-            })
+            });
         });
     });
 }
