@@ -42,7 +42,10 @@ module.exports = function(app, passport) {
     // Test route for ensuring authentication is working
     router.get('/', requireAuth, function(req, res) {
         res.json({ message: 'obie-api' })
-    });  
+    }); 
+    
+    // Check for unique email during registration
+    router.get('/email_check', authentication.email_check);
 
     // Set routing for campaign calls
     router.get('/campaigns', requireAuth, campaign.index);

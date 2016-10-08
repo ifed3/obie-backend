@@ -26,8 +26,16 @@ function setUserInfo(user) {
 //   next();
 // }
 
-exports.check_email = function(req, res) {
+exports.email_check = function(req, res, next) {
     const email = req.query.email
+    User.find({ email: email}, function(err, user) {
+        if (err) next(err);
+        // Check if email is unique as in not present in db
+        // Only existing emails will have a user.length attribute
+        console.log("Email is unique " + String(user.length ? false : true));
+        if (user.length) res.status(404).end(); // Existing email address, not unique
+        res.status(200).end();
+    });
 }
 
 exports.login = function(req, res) {
