@@ -18,6 +18,7 @@ function setUserInfo(user) {
         stripe: user.stripe,
         company: user.profile.company,
         email: user.email,
+        image: user.profile.picture,
         role: user.role,
         campaigns: user.campaigns
     }
