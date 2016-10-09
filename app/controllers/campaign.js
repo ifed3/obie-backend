@@ -20,7 +20,10 @@ exports.create = function(req, res) {
         if (err) res.send(err);
         user.createCampaign(name, influencers, function(err) {
             if (err) res.status(409).json({ error: err.message });
-            res.status(200).json("Campaign created");
+            user.save(function(err) {
+                if (err) res.send(err);
+                res.status(200).json("Campaign created");
+            }); 
         });
     });
 }

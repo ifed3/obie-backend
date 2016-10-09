@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const FIRST_CAMPAIGN_TITLE = "My First Campaign"; 
 
 // Extend user schema with the following properties
 
@@ -33,6 +34,16 @@ module.exports = function userCampaign(schema) {
         campaigns: [CampaignSchema]
     });
 
+    // Create initial campaign before saving to db
+    schema.pre('save', function(next){
+        var user = this;
+        if (!user.isNew) return next();
+        user.createCampaign(FIRST_CAMPAIGN_TITLE, [], function(err){
+            if (err) return next(err);
+            next();
+        });
+    });
+
     var getCampaign = function(campaigns, name, callback) {
         // Check for campaign existence
         var campaign = campaigns.filter(function(campaign) {
@@ -52,6 +63,7 @@ module.exports = function userCampaign(schema) {
         var campaignFilterArray = user.campaigns.filter(function(campaign) {
             return campaign.name === name;
         });
+
         if (campaignFilterArray.length > 0) return callback(new Error(name + " campaign already exists"));
 
         if (!user.campaigns || user.campaigns.length == 0) { // Initialize campaigns array
@@ -63,12 +75,8 @@ module.exports = function userCampaign(schema) {
             name: name,
             influencers: influencers.length == 0 ? [] : influencers,
             stages: [stage]
-        });   
-
-        user.save(function(err) {
-            if (err) return callback(err);
-            return callback(null);
-        });                    
+        });  
+        return callback(null);                    
     };
 
     schema.methods.deleteCampaign = function(name, callback) {
