@@ -17,6 +17,7 @@ function setUserInfo(user) {
         company: user.profile.company,
         email: user.email,
         image: user.profile.picture,
+        premium: user.stripe.plan == "premium" ? true : false,
         role: user.role,
         campaigns: user.campaigns
     }
