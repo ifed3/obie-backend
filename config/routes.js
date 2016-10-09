@@ -40,7 +40,7 @@ module.exports = function(app, passport) {
     router.post('/stripe/events', stripeWebhook.middleware, stripe_events)
 
     // Test route for ensuring authentication is working
-    router.get('/', requireAuth, function(req, res) {
+    router.get('/', function(req, res) {
         res.json({ message: 'obie-api' })
     }); 
     
