@@ -31,11 +31,14 @@ function setUserInfo(user) {
 
 exports.email_check = function(req, res, next) {
     const email = req.query.email
-    User.findOne({ email: email}, function(err, user) {
+    User.findOne({ email: email }, function(err, user) {
         if (err) next(err);
         // Check if email is unique as in not present in db
-        if (user.length) res.status(404).end(); // Existing email address, not unique
-        res.status(200).end();
+        if (user) { // Existing email address, not unique
+            res.status(404).send(); 
+        } else {
+            res.status(200).send();
+        }
     });
 }
 
