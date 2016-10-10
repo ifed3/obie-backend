@@ -60,8 +60,4 @@ module.exports = function(app, passport) {
         .get(user.show)
         .put(user.update)
         .delete(user.destroy); 
-
-    // Set all routes to be prefixed with apis
-    app.use('/api', router);                         
-
 }
