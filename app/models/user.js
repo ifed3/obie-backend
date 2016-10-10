@@ -22,7 +22,8 @@ var UserSchema = new mongoose.Schema({
         company: { type: String, required: true },
         website: { type: String },
         picture: { type: String },
-        background: {type: String}
+        background: { type: String },
+        device_token: { type: String }
     },
     role: {
         type: String,

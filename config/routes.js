@@ -55,11 +55,13 @@ module.exports = function(app, passport) {
     router.delete('/campaign', requireAuth, campaign.destroy);
 
     // Set routing for user api calls
-    router.get('/users', requireAuth, authentication.roleAuth('owner'), user.index);
-    router.route('/users/:id', requireAuth)
-        .get(user.show)
-        .put(user.update)
-        .delete(user.destroy); 
+    router.post('/device_token', requireAuth, user.device_token);
+
+    // router.get('/users', requireAuth, authentication.roleAuth('owner'), user.index);
+    // router.route('/users/:id', requireAuth)
+    //     .get(user.show)
+    //     .put(user.update)
+    //     .delete(user.destroy); 
 
     // Set all routes to be prefixed with apis
     app.use(router);                         

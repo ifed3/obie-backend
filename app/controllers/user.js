@@ -2,6 +2,19 @@
 
 const User = require('../../app/models/user');
 
+exports.device_token = function(req, res) {
+    const id = req.user._id,
+        apn_device_token = req.device_token;
+    User.findById(id, function(err, user) {
+        if (err) res.status(422).send('No user was found');
+        user.profile.device_token = apn_device_token;
+        user.save(function(err) {
+            if (err) res.send(err);
+            res.status(200).send("Campaign created");
+        }); 
+    });
+}
+
 // Show all companies
 exports.index = function(req, res) {
     User.find({}, function(err, companies) {
@@ -20,7 +33,7 @@ exports.show = function(req, res) {
 
 // Update specific user details
 exports.update = function(req, res) {
-    User.findById(req.params.company_id, function(err, user) {
+    User.findById(req.params.id, function(err, user) {
         if (err) res.send(err);
         //Update user info here
         user.save(function(err) {
