@@ -34,7 +34,7 @@ exports.email_check = function(req, res, next) {
     User.findOne({ email: email}, function(err, user) {
         if (err) next(err);
         // Check if email is unique as in not present in db
-        if (user) res.status(404).end(); // Existing email address, not unique
+        if (user.length) res.status(404).end(); // Existing email address, not unique
         res.status(200).end();
     });
 }
