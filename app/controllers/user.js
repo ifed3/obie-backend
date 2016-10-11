@@ -4,14 +4,14 @@ const User = require('../../app/models/user');
 
 exports.device_token = function(req, res) {
     const id = req.user._id,
-        apn_device_token = req.device_token;
+        apn_device_token = req.body.device_token;
     User.findById(id, function(err, user) {
         if (err) res.status(422).send('No user was found');
         user.profile.device_token = apn_device_token;
         user.save(function(err) {
             if (err) res.send(err);
-            console.log(apn_device_token);
-            res.status(200).send("Campaign created");
+            console.log("Set user device token");
+            res.status(200).send("Token retrieved");
         }); 
     });
 }
