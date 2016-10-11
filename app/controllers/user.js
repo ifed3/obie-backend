@@ -6,12 +6,12 @@ exports.device_token = function(req, res) {
     const id = req.user._id,
         apn_device_token = req.body.device_token;
     User.findById(id, function(err, user) {
-        if (err) res.status(422).send('No user was found');
+        if (err) res.sned(err);
         user.profile.device_token = apn_device_token;
         user.save(function(err) {
             if (err) res.send(err);
             console.log("Set user device token");
-            res.status(200).send("Token retrieved");
+            res.status(200).end();
         }); 
     });
 }
