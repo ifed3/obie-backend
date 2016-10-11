@@ -10,6 +10,7 @@ exports.device_token = function(req, res) {
         user.profile.device_token = apn_device_token;
         user.save(function(err) {
             if (err) res.send(err);
+            console.log(apn_device_token);
             res.status(200).send("Campaign created");
         }); 
     });
