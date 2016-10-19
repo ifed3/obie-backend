@@ -8,17 +8,17 @@ module.exports = {
     stripeOptions: {
         apiKey: process.env.PROD_STRIPE_KEY,
         stripePubKey: process.env.PROD_STRIPE_PUB_KEY,
-        defaultPlan: 'standard',
+        defaultPlan: 'premium',
         plans: ['standard', 'premium'],
-        planData: {
-            'standard': {
-                name: 'Standard',
-                price: 49
-            },
-            'premium': {
-                name: 'Premium',
-                price: 79
-            }
-        }
+        // planData: {
+        //     'standard': {
+        //         name: 'Standard',
+        //         price: 79
+        //     },
+        //     'premium': {
+        //         name: 'Premium',
+        //         price: 129
+        //     }
+        // }
     }
 }
