@@ -13,12 +13,11 @@ function setUserInfo(user) {
     return {
         _id: user._id,
         name: user.profile.name,
-        stripe: user.stripe,
+        stripe: user.stripe,        
         company: user.profile.company,
         email: user.email,
         image: user.profile.picture,
         background: user.profile.background,
-        premium: user.stripe.plan == "premium" ? true : false,
         role: user.role,
         campaigns: user.campaigns
     }
@@ -60,8 +59,7 @@ exports.register = function(req, res, next) {
     const email = req.body.email,
         name = req.body.profile.name,
         company = req.body.profile.company,
-        password = req.body.password,
-        stripe_token = req.body.stripe.token
+        password = req.body.password
 
     // Error checking
     if (!email) return res.status(422).json({ error: 'You must enter an email address'});
@@ -77,11 +75,7 @@ exports.register = function(req, res, next) {
         let user = new User(req.body);
         user.save(function(err) {
             if (err) return next(err);
-            user.setPlan(user.stripe.plan, stripe_token, function(err) {
-                if (err) return next(err);
-                console.log("User succesfully created and subscribed to " + user.stripe.plan + " plan")
-                res.status(200).json(generateUserResponse(user));
-            });
+            res.status(200).json(generateUserResponse(user));
         });
     });
 }
