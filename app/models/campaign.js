@@ -89,11 +89,13 @@ module.exports = function userCampaign(schema) {
         // }); 
     }
 
-    schema.methods.updateCampaign = function(name, influencers, stage_name, callback) {
+    schema.methods.updateCampaign = function(old_name, new_name, influencers, stage_name, callback) {
         var user = this;
 
         // Check for campaign existence
-        var campaign = getCampaign(user.campaigns, name, callback);
+        var campaign = getCampaign(user.campaigns, old_name, callback);
+
+        if (new_name) campaign.name = new_name;
 
         // Update campaign influencers
         if (campaign.influencers.length < 1 && influencers.length == 0) { //

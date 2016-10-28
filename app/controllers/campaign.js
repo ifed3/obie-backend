@@ -17,7 +17,7 @@ exports.index = function(req, res) {
 exports.create = function(req, res) {
     const id = req.body.id,
         name = req.body.campaign_name,
-        influencers = req.body.influencers;
+        influencers = req.body.influencers || [];
     User.findById(id, function(err, user) {
         if (err) res.send(err);
         user.createCampaign(name, influencers, function(err) {
@@ -33,12 +33,13 @@ exports.create = function(req, res) {
 // Update campaign
 exports.update = function(req, res) {
     const id = req.body.id,
-        name = req.body.campaign_name,
-        influencers = req.body.influencers,
-        stage = req.body.stage_name;
+        old_name = req.body.campaign_name,
+        new_name = req.body.new_name || null,
+        influencers = req.body.influencers || [],
+        stage = req.body.stage_name;   
     User.findById(id, function(err, user) {
         if (err) res.send(err);
-        user.updateCampaign(name, influencers, stage, function(err) {
+        user.updateCampaign(old_name, new_name, influencers, stage, function(err) {
             if (err) res.status(409).json({ error: err.message });
             res.status(204).end();
         });
