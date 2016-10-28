@@ -48,11 +48,11 @@ module.exports = function(app, passport) {
     router.get('/email_check', authentication.email_check);
 
     // Set routing for campaign calls
-    router.get('/campaigns', requireAuth, campaign.index);
-    router.get('/campaign', requireAuth, campaign.show);
-    router.post('/campaign', requireAuth, campaign.create);
-    router.put('/campaign', requireAuth, campaign.update);
-    router.delete('/campaign', requireAuth, campaign.destroy);
+    router.get('/campaigns', requireLogin, authentication.roleAuth(REQUIRE_ADMIN), campaign.index);
+    router.get('/campaign', requireLogin, authentication.roleAuth(REQUIRE_ADMIN), campaign.show);
+    router.post('/campaign', requireLogin, authentication.roleAuth(REQUIRE_ADMIN), campaign.create);
+    router.put('/campaign', requireLogin, authentication.roleAuth(REQUIRE_ADMIN), campaign.update);
+    router.delete('/campaign', requireLogin, authentication.roleAuth(REQUIRE_ADMIN), campaign.destroy);
 
     // Set routing for user api calls
     router.post('/device_token', requireAuth, user.device_token);

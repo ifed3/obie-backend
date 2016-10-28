@@ -2,9 +2,11 @@
 
 const User = require('../../app/models/user');
 
+// Use req.user.id when switching to campaign update by user and not admin
+
 // Get user's campaigns 
 exports.index = function(req, res) {
-    const id = req.user.id;
+    const id = req.query.id;
     User.findById(id, function(err, user) {
         if (err) res.send(err);
         res.status(200).json({ campaigns: user.campaigns });
@@ -13,7 +15,7 @@ exports.index = function(req, res) {
 
 // Create campaign
 exports.create = function(req, res) {
-    const id = req.user.id,
+    const id = req.body.id,
         name = req.body.campaign_name,
         influencers = req.body.influencers;
     User.findById(id, function(err, user) {
@@ -30,7 +32,7 @@ exports.create = function(req, res) {
 
 // Update campaign
 exports.update = function(req, res) {
-    const id = req.user.id,
+    const id = req.body.id,
         name = req.body.campaign_name,
         influencers = req.body.influencers,
         stage = req.body.stage_name;
@@ -45,7 +47,7 @@ exports.update = function(req, res) {
 
 // Show campaign
 exports.show = function(req, res) {
-    const id = req.user.id,
+    const id = req.query.id,
         name = req.query.name;
     User.findById(id, function(err, user) {
         if (err) res.send(err);
@@ -58,7 +60,7 @@ exports.show = function(req, res) {
 
 // Remove campaign
 exports.destroy = function(req, res) {
-    const id = req.user.id,
+    const id = req.query.id,
         name = req.query.name;
     User.findById(id, function(err, user) {
         if (err) res.send(err);
