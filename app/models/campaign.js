@@ -7,7 +7,7 @@ const FIRST_CAMPAIGN_TITLE = "My First Campaign";
 
 module.exports = function userCampaign(schema) {
     var InfluencerSchema = new mongoose.Schema({
-        name: {type: String, required: true},
+        name: {type: String},
         image: {type: String, required: true},
         location: {type: String}
     });
@@ -29,6 +29,7 @@ module.exports = function userCampaign(schema) {
     });
 
     let CampaignStage = mongoose.model('CampaignStage', CampaignStagesSchema);
+    let Influencer = mongoose.model('Influencer', InfluencerSchema);
 
     schema.add({
         campaigns: [CampaignSchema]
@@ -101,7 +102,11 @@ module.exports = function userCampaign(schema) {
         if (campaign.influencers.length < 1 && influencers.length == 0) { //
             campaign.influencers = [];
         } else { // Push array elements into existing array
-            campaign.influencers.push.apply(campaign.influencers, influencers);
+            for (var i = 0; i < influencers.length; i++) {
+                var selection = influencers[i];
+                let influencer = new Influencer({ name: selection.name, image: selection.image });
+                campaign.influencers.push(influencer); 
+            }
         }
 
         // Initialize stages array if non-existent
@@ -116,8 +121,6 @@ module.exports = function userCampaign(schema) {
         if (stageFilterArray.length < 1) {
             let stage = new CampaignStage({ name: stage_name, status: true });
             campaign.stages.push(stage)
-        } else {
-            return callback(new Error(stage_name + " stage of campaign already exists"));
         }
 
         user.save(function(err) {
