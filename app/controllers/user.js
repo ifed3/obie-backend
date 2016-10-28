@@ -16,17 +16,17 @@ exports.device_token = function(req, res) {
     });
 }
 
-// Show all companies
+// Show all users
 exports.index = function(req, res) {
-    User.find({}, function(err, companies) {
+    User.find({}, function(err, users) {
         if (err) res.send(err);
-        res.json(companies);
+        res.json(users);
     })
 }
 
 // Show specific user details
 exports.show = function(req, res) {
-    User.findById(req.params.company_id, function(err, user) {
+    User.findById(req.params.id, function(err, user) {
         if (err) res.send(err);
         res.json(user);
     });
@@ -34,19 +34,15 @@ exports.show = function(req, res) {
 
 // Update specific user details
 exports.update = function(req, res) {
-    User.findById(req.params.id, function(err, user) {
+    User.update({_id: req.params.id}, req.body.update, function(err, user) {
         if (err) res.send(err);
-        //Update user info here
-        user.save(function(err) {
-            if (err) res.send(err);
-            res.json({ message: 'User updated' });
-        });
+        res.json({ message: 'User updated'});
     });
 }
 
 // Delete a user from database
 exports.destroy = function(req, res) {
-    User.remove({_id: req.params.company_id}, function(err, companies) {
+    User.remove({_id: req.params.id}, function(err, user) {
         if (err) res.send(err);
         res.json({ message: 'User deleted'});
     });
