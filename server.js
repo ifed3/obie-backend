@@ -2,11 +2,12 @@
 
 'use strict';
 
-//Monitor with newrelic
-require('newrelic');
-
 // Libraries to use in application
 require('dotenv').config();
+
+// Monitor with newrelic
+require('newrelic');
+
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
