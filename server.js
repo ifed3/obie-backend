@@ -2,6 +2,9 @@
 
 'use strict';
 
+//Monitor with newrelic
+require('newrelic');
+
 // Libraries to use in application
 require('dotenv').config();
 const mongoose = require('mongoose');
