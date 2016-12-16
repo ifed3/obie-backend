@@ -15,11 +15,12 @@
     "dotenv": "*",
     "express": "*",
     "jsonwebtoken": "*",
-    "morgan": "*",
     "mongoose": "*",
+    "morgan": "*",
+    "newrelic": "*",
     "passport": "*",
-    "passport-local": "*",
     "passport-jwt": "*",
+    "passport-local": "*",
     "stripe": "*",
     "stripe-webhook-middleware": "*"
   }
