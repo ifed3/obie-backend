@@ -1,0 +1,27 @@
+{
+  "name": "obie-stripe-server",
+  "version": "1.0.0",
+  "description": "Payments processor for Obie app",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ife Ajiboye <ife@obieapp.com>",
+  "dependencies": {
+    "bcrypt": "*",
+    "body-parser": "*",
+    "dotenv": "*",
+    "express": "*",
+    "jsonwebtoken": "*",
+    "mongoose": "*",
+    "morgan": "*",
+    "newrelic": "*",
+    "passport": "*",
+    "passport-jwt": "*",
+    "passport-local": "*",
+    "stripe": "*",
+    "stripe-webhook-middleware": "*"
+  }
+}
